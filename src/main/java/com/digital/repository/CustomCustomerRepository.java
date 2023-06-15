@@ -11,19 +11,21 @@ import java.util.List;
 
 @Component
 public class CustomCustomerRepository {
-    public Specification<Customer> searchByCpfOrEmail(String cpf, String email){
+    public Specification<Customer> searchByCpfOrEmail(String field){
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (StringUtils.hasText(cpf)){
-                predicates.add(
-                        criteriaBuilder.equal(root.get("cpf"), cpf));
-            }
-            if (StringUtils.hasText(email)){
-                predicates.add(
-                        criteriaBuilder.equal(root.get("email"), email));
-            }
+            if (StringUtils.hasText(field)){
+                if(field.contains("@")){
+                    predicates.add(
+                            criteriaBuilder.equal(root.get("email"), field));
+                }
+                else{
+                    predicates.add(
+                            criteriaBuilder.equal(root.get("cpf"), field));
+                }
 
+            }
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
     }
