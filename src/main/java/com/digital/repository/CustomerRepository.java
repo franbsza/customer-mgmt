@@ -18,6 +18,6 @@ public interface CustomerRepository extends JpaRepository<Customer, String> , Jp
 
     Optional<Customer> findOne(Specification<Customer> toSpec);
 
-    @Query(value = "SELECT DISTINCT * FROM Customer cs INNER JOIN Contact ctt ON cs.cpf = ctt.cpf WHERE ctt.telephone = :telephone ", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT * FROM customer cs INNER JOIN contact ctt ON cs.cpf = ctt.cpf WHERE ctt.telephone = :telephone ", nativeQuery = true)
     List<Customer> findByTelephone(@Param("telephone") String telephone);
 }

@@ -48,4 +48,12 @@ public class CustomerService {
     public List<Customer> getAll() {
         return customerRepository.findAll();
     }
+
+    public boolean delete(String id) {
+        if(customerRepository.existsById(id)){
+            customerRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }

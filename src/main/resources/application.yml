@@ -4,9 +4,9 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   datasource:
-    url: jdbc:mysql://localhost:3306/customer
+    url: jdbc:mysql://172.18.0.2:3306/customer
     username: root
-    password: 12345678
+    password: root
     testWhileIdle: true
     validationQuery: SELECT 1
   jpa:
