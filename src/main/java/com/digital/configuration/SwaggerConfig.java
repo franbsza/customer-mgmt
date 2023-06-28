@@ -2,52 +2,27 @@ package com.digital.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.bind.annotation.RequestMethod;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.builders.ResponseMessageBuilder;
-import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
-import springfox.documentation.service.ResponseMessage;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
-@EnableSwagger2
 public class SwaggerConfig {
     @Bean
     ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Customer Management API")
-                .description("The Customer Management API is responsible to handle the events about customer like search and update their data")
+                .description("The Customer Management API is responsible for some basic operations to manage it such create one, search all , search by email , update , delete and so on.")
                 .license("")
                 .version("1.0")
                 .contact(new Contact("Architecture Team - Digital", "", "adm.digital@dom.net.br"))
                 .build();
     }
-
-    private List<ResponseMessage> responseMessageForGET()
-    {
-        return new ArrayList<ResponseMessage>() {{
-            add(new ResponseMessageBuilder()
-                    .code(500)
-                    .message("500 message")
-                    .responseModel(new ModelRef("Error"))
-                    .build());
-            add(new ResponseMessageBuilder()
-                    .code(403)
-                    .message("Forbidden!")
-                    .build());
-        }};
-    }
-
 
     @Bean
     public Docket customImplementation() {
@@ -57,8 +32,7 @@ public class SwaggerConfig {
                 .paths(regex("/api/.*"))
                 .build()
                 .apiInfo(apiInfo())
-                .useDefaultResponseMessages(false)
-                .globalResponseMessage(RequestMethod.GET, responseMessageForGET());
+                .useDefaultResponseMessages(false);
 
     }
 }
