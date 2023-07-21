@@ -10,18 +10,16 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/customer")
+@RequestMapping(value = "/api/v1/customer", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CustomerController {
 
     private final CustomerService service;
 
     @PostMapping(
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Customer> create(@RequestBody @Valid Customer customer){
         Customer customerResponse = service.create(customer);
         if(customerResponse == null){
@@ -31,41 +29,35 @@ public class CustomerController {
     }
 
     @PutMapping(
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Customer> update(@RequestHeader("cpf") String cpf,
-                                           @RequestBody @Valid Customer customer){
-        Customer customerResponse = service.update(cpf , customer);
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Customer> update(@RequestBody @Valid Customer customer){
+        Customer customerResponse = service.update(customer);
         if(customerResponse == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(customerResponse, HttpStatus.ACCEPTED);
     }
 
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Customer> getCustomerById(@PathVariable String id){
+
+        return ResponseEntity.of(service.getCustomerById(id));
+    }
+
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Customer> getCustomer(@RequestHeader(value = "cpf", required = false) String cpf,
                                                 @RequestHeader(value = "email", required = false) String email){
 
-        Optional<Customer> customer;
-        if(cpf != null){
-            customer = service.getCustomer(cpf);
-        }else if(email != null){
-            customer = service.getCustomer(email);
-        }
-        else{
+        if(cpf == null && email == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-        if(customer.isPresent()){
-            return new ResponseEntity<>(customer.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return ResponseEntity.of(service.getCustomer(cpf, email));
     }
 
-    @GetMapping(path = {"/telefone"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Customer>> getCustomerByTelefone(@RequestHeader(value = "telefone") String telefone){
+    @GetMapping(path = {"/telephone"})
+    public ResponseEntity<List<Customer>> getCustomerByTelephone(@RequestHeader(value = "telephone") String telephone){
 
-        List<Customer> customer = service.getCustomerByTelefone(telefone);
+        List<Customer> customer = service.getCustomerByTelefone(telephone);
 
         if(!customer.isEmpty()){
             return new ResponseEntity<>(customer, HttpStatus.OK);
@@ -74,7 +66,7 @@ public class CustomerController {
     }
 
 
-    @GetMapping(path = {"/all"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = {"/all"})
     public ResponseEntity<List<Customer>> getAll(){
 
         List<Customer> customers = service.getAll();
@@ -86,7 +78,7 @@ public class CustomerController {
     }
 
     @DeleteMapping
-    public ResponseEntity delete(@RequestHeader String cpf){
+    public ResponseEntity<HttpStatus> delete(@RequestHeader String cpf){
         if(service.delete(cpf)){
             return new ResponseEntity<>(HttpStatus.OK);
         }
