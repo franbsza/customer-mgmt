@@ -1,16 +1,17 @@
 package com.digital.domain;
 
 import com.digital.infraestructure.validation.bithdate.BirthDate;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.RepresentationModel;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer {
+public class Customer extends RepresentationModel<Customer> {
     @Id
     @NotEmpty
     private String cpf;
@@ -37,11 +38,10 @@ public class Customer {
     private String birthdate;
 
     @Valid
-    @NotEmpty
-    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "cpf")
-    private List<Contact> contacts;
+    @ElementCollection
+    private List<String> contacts;
 
+    @Valid
     @NotNull
     @OneToOne(fetch = FetchType.EAGER ,cascade=CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
