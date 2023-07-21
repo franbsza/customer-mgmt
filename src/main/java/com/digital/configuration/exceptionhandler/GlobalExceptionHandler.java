@@ -3,6 +3,7 @@ package com.digital.configuration.exceptionhandler;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
@@ -54,6 +55,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ExceptionDTO> ConstraintViolationException(ConstraintViolationException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ExceptionDTO(HttpStatus.BAD_REQUEST, e.getMessage())
+        );
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ExceptionDTO> methodArgumentNotValidException(MethodArgumentNotValidException e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 new ExceptionDTO(HttpStatus.BAD_REQUEST, e.getMessage())
         );
