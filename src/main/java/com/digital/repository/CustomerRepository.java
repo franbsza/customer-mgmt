@@ -13,11 +13,12 @@ import java.util.Optional;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, String> , JpaSpecificationExecutor<Customer> {
-    @Query("SELECT (c) FROM Customer c WHERE (c.name) like %:name% ")
-    List<Customer> findByName(@Param("name") String name);
-
     Optional<Customer> findOne(Specification<Customer> toSpec);
 
-    @Query(value = "SELECT DISTINCT * FROM customer cs INNER JOIN contact ctt ON cs.cpf = ctt.cpf WHERE ctt.telephone = :telephone ", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT * FROM customer_contacts " +
+            "INNER JOIN customer " +
+            "ON customer_contacts.customer_cpf = customer.cpf " +
+            "WHERE customer_contacts.contacts = :telephone ",
+            nativeQuery = true)
     List<Customer> findByTelephone(@Param("telephone") String telephone);
 }
