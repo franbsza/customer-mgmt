@@ -78,11 +78,11 @@ public class CustomerService {
                 .add(allCustomers));
     }
 
-    public List<Customer> getCustomerByTelefone(String telefone) {
+    public List<Customer> getCustomerByTelephone(String telephone) {
 
-        return customerRepository.findByTelephone(telefone).stream()
+        return customerRepository.findByTelephone(telephone).stream()
                 .map(customer -> customer.add(linkTo(CustomerController.class)
-                        .slash(telefone)
+                        .slash(telephone)
                         .withSelfRel()))
                 .toList();
     }

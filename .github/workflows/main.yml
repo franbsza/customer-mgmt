@@ -1,4 +1,4 @@
-name: ci-customer-mngmt
+name: ci-customer-mgmt
 on: [push]
 
 jobs:

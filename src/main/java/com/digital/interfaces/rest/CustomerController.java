@@ -57,7 +57,7 @@ public class CustomerController {
     @GetMapping(path = {"/telephone"})
     public ResponseEntity<List<Customer>> getCustomerByTelephone(@RequestHeader(value = "telephone") String telephone){
 
-        List<Customer> customer = service.getCustomerByTelefone(telephone);
+        List<Customer> customer = service.getCustomerByTelephone(telephone);
 
         if(!customer.isEmpty()){
             return new ResponseEntity<>(customer, HttpStatus.OK);
