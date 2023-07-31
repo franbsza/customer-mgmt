@@ -7,13 +7,10 @@ spring:
     url: jdbc:mysql://172.18.0.2:3306/customer
     username: root
     password: root
-    testWhileIdle: true
-    validationQuery: SELECT 1
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
-      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect

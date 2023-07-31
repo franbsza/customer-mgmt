@@ -11,7 +11,7 @@ import java.util.List;
 
 @Component
 public class CustomCustomerRepository {
-    public Specification<Customer> searchByCpfOrEmail(String field){
+    public Specification<Customer> filter(String field){
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 

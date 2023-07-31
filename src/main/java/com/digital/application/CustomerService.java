@@ -23,10 +23,11 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomCustomerRepository customCustomerRepository;
+    private static final String ALL_CUSTOMERS = "all customers";
 
     public Customer create(Customer customer) {
         Link selfLink = linkTo(CustomerController.class).slash(customer.getCpf()).withSelfRel();
-        Link allCustomers = linkTo(methodOn(CustomerController.class).getAll()).withRel("all customers");
+        Link allCustomers = linkTo(methodOn(CustomerController.class).getAll()).withRel(ALL_CUSTOMERS);
         return customerRepository.save(customer).add(selfLink).add(allCustomers);
     }
 
@@ -53,7 +54,7 @@ public class CustomerService {
         Optional<Customer> customer = customerRepository.findById(id);
 
         Link allCustomers = linkTo(methodOn(CustomerController.class)
-                .getAll()).withRel("all customers");
+                .getAll()).withRel(ALL_CUSTOMERS);
 
         return customer.map(value -> value.add(
                         linkTo(methodOn(CustomerController.class).getCustomerById(id)).withSelfRel())
@@ -66,11 +67,11 @@ public class CustomerService {
                 .findFirst().orElseThrow(
                         () -> new IllegalArgumentException("Invalid Arguments"));
 
-        Specification<Customer> customQuery =  customCustomerRepository.searchByCpfOrEmail(arg);
+        Specification<Customer> customQuery =  customCustomerRepository.filter(arg);
         Optional<Customer> customer = customerRepository.findOne(customQuery);
 
         Link allCustomers = linkTo(methodOn(CustomerController.class)
-                .getAll()).withRel("all customers");
+                .getAll()).withRel(ALL_CUSTOMERS);
 
         return customer.map(value -> value.add(
                         linkTo(methodOn(CustomerController.class).getCustomerById(value.getCpf())).withSelfRel())
